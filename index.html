@@ -505,6 +505,35 @@
           <span class="contact-card-label">Phone</span>
           <span class="contact-card-value">+20 122 845 5360</span>
         </a>
+        <button id="contact-form-btn" class="contact-form-btn" type="button">Send a quick message</button>
+      </div>
+      <div id="contact-form-modal" class="contact-form-modal">
+        <div class="contact-form-overlay"></div>
+        <div class="contact-form-card">
+          <div class="contact-form-header">
+            <h3 class="contact-form-title">Send a Message</h3>
+            <button id="contact-form-close" class="contact-form-close" type="button" aria-label="Close form">×</button>
+          </div>
+          <form id="contact-form" class="contact-form">
+            <div class="form-group">
+              <label for="contact-name" class="form-label">Name</label>
+              <input type="text" id="contact-name" class="form-input" placeholder="Your name" required>
+              <span class="form-error" data-field="name"></span>
+            </div>
+            <div class="form-group">
+              <label for="contact-email" class="form-label">Email</label>
+              <input type="email" id="contact-email" class="form-input" placeholder="your@email.com" required>
+              <span class="form-error" data-field="email"></span>
+            </div>
+            <div class="form-group">
+              <label for="contact-message" class="form-label">Message</label>
+              <textarea id="contact-message" class="form-textarea" placeholder="Your message..." rows="5" required></textarea>
+              <span class="form-error" data-field="message"></span>
+            </div>
+            <div class="form-feedback-msg" id="form-feedback"></div>
+            <button type="submit" class="form-submit-btn">Send Message</button>
+          </form>
+        </div>
       </div>
     </section>
 

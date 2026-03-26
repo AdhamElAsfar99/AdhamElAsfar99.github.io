@@ -209,4 +209,121 @@ document.addEventListener("DOMContentLoaded", function () {
       setProjectState(!currentlyExpanded);
     });
   });
+
+  // Contact form modal interaction and validation.
+  var contactFormBtn = document.getElementById("contact-form-btn");
+  var contactFormModal = document.getElementById("contact-form-modal");
+  var contactFormOverlay = document.querySelector(".contact-form-overlay");
+  var contactFormClose = document.getElementById("contact-form-close");
+  var contactForm = document.getElementById("contact-form");
+  var contactNameInput = document.getElementById("contact-name");
+  var contactEmailInput = document.getElementById("contact-email");
+  var contactMessageInput = document.getElementById("contact-message");
+  var formFeedback = document.getElementById("form-feedback");
+
+  // Email validation regex.
+  var emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+  function openContactForm() {
+    contactFormModal.classList.add("is-open");
+    contactForm.reset();
+    clearFormErrors();
+    formFeedback.classList.remove("is-visible", "success", "error");
+    contactNameInput.focus();
+  }
+
+  function closeContactForm() {
+    contactFormModal.classList.remove("is-open");
+  }
+
+  function clearFormErrors() {
+    var errorSpans = document.querySelectorAll(".form-error");
+    errorSpans.forEach(function (span) {
+      span.textContent = "";
+      span.classList.remove("is-visible");
+    });
+  }
+
+  function showFieldError(fieldName, message) {
+    var errorSpan = document.querySelector(".form-error[data-field='" + fieldName + "']");
+    if (errorSpan) {
+      errorSpan.textContent = message;
+      errorSpan.classList.add("is-visible");
+    }
+  }
+
+  function validateForm() {
+    clearFormErrors();
+    var isValid = true;
+
+    // Validate name.
+    var name = contactNameInput.value.trim();
+    if (!name) {
+      showFieldError("name", "Name is required");
+      isValid = false;
+    }
+
+    // Validate email.
+    var email = contactEmailInput.value.trim();
+    if (!email) {
+      showFieldError("email", "Email is required");
+      isValid = false;
+    } else if (!emailRegex.test(email)) {
+      showFieldError("email", "Please enter a valid email address");
+      isValid = false;
+    }
+
+    // Validate message.
+    var message = contactMessageInput.value.trim();
+    if (!message) {
+      showFieldError("message", "Message is required");
+      isValid = false;
+    }
+
+    return isValid;
+  }
+
+  function showFeedback(type, message) {
+    formFeedback.textContent = message;
+    formFeedback.classList.add("is-visible", type);
+    formFeedback.classList.remove(type === "success" ? "error" : "success");
+  }
+
+  // Event listeners for form.
+  contactFormBtn.addEventListener("click", openContactForm);
+  contactFormOverlay.addEventListener("click", closeContactForm);
+  contactFormClose.addEventListener("click", closeContactForm);
+
+  // Close modal on Escape key.
+  document.addEventListener("keydown", function (e) {
+    if (e.key === "Escape" && contactFormModal.classList.contains("is-open")) {
+      closeContactForm();
+    }
+  });
+
+  // Form submission.
+  contactForm.addEventListener("submit", function (e) {
+    e.preventDefault();
+
+    if (!validateForm()) {
+      return;
+    }
+
+    var name = contactNameInput.value.trim();
+    var email = contactEmailInput.value.trim();
+    var message = contactMessageInput.value.trim();
+
+    // In a real application, you would send this data to a server here.
+    console.log("Form submitted:", { name: name, email: email, message: message });
+
+    // Show success feedback.
+    showFeedback("success", "Thank you! Your message has been sent.");
+
+    // Reset form and close after delay.
+    setTimeout(function () {
+      contactForm.reset();
+      closeContactForm();
+      formFeedback.classList.remove("is-visible", "success", "error");
+    }, 1600);
+  });
 });
