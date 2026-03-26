@@ -165,4 +165,48 @@ document.addEventListener("DOMContentLoaded", function () {
       setSectionState(!currentlyExpanded);
     });
   });
+
+  // Project card expand/collapse interaction.
+  var projectCards = document.querySelectorAll(".project-card");
+  projectCards.forEach(function (card) {
+    var toggleBtn = card.querySelector(".project-toggle-btn");
+    var details = card.querySelector(".project-details");
+
+    if (!toggleBtn || !details) {
+      return;
+    }
+
+    function setProjectState(isExpanded) {
+      card.classList.toggle("is-expanded", isExpanded);
+      toggleBtn.setAttribute("aria-expanded", String(isExpanded));
+      toggleBtn.setAttribute("aria-label", isExpanded ? "Hide project details" : "Show project details");
+
+      if (isExpanded) {
+        // Set max-height to the content height for smooth expansion.
+        details.style.maxHeight = details.scrollHeight + "px";
+      } else {
+        // Collapse to 0 height.
+        details.style.maxHeight = "0px";
+      }
+    }
+
+    details.addEventListener("transitionend", function (event) {
+      if (event.propertyName !== "max-height") {
+        return;
+      }
+
+      if (card.classList.contains("is-expanded")) {
+        // Remove the cap once fully expanded so content can adapt.
+        details.style.maxHeight = "none";
+      }
+    });
+
+    // Default to collapsed.
+    setProjectState(false);
+
+    toggleBtn.addEventListener("click", function () {
+      var currentlyExpanded = toggleBtn.getAttribute("aria-expanded") === "true";
+      setProjectState(!currentlyExpanded);
+    });
+  });
 });
