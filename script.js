@@ -1,0 +1,90 @@
+document.addEventListener("DOMContentLoaded", function () {
+  // Sections requested for expand/collapse behavior.
+  var collapsibleSectionIds = [
+    "experience",
+    "skills",
+    "projects",
+    "publications",
+    "achievements",
+    "extracurricular"
+  ];
+
+  collapsibleSectionIds.forEach(function (sectionId) {
+    var section = document.getElementById(sectionId);
+    if (!section) {
+      return;
+    }
+
+    var title = section.querySelector(".section-title");
+    if (!title) {
+      return;
+    }
+
+    var headingRow = document.createElement("div");
+    headingRow.className = "section-heading-row";
+
+    section.insertBefore(headingRow, title);
+    headingRow.appendChild(title);
+
+    // Create a wrapper for content below the title so visibility can be toggled.
+    var contentWrapper = document.createElement("div");
+    contentWrapper.className = "section-collapsible-content";
+    contentWrapper.id = "section-content-" + sectionId;
+
+    var sibling = headingRow.nextSibling;
+    while (sibling) {
+      var nextSibling = sibling.nextSibling;
+      contentWrapper.appendChild(sibling);
+      sibling = nextSibling;
+    }
+
+    section.appendChild(contentWrapper);
+
+    var toggleButton = document.createElement("button");
+    toggleButton.type = "button";
+    toggleButton.className = "section-toggle-btn";
+    toggleButton.setAttribute("aria-controls", contentWrapper.id);
+    toggleButton.setAttribute("aria-label", "Expand section");
+    toggleButton.innerHTML = '<span class="toggle-icon" aria-hidden="true">+</span>';
+
+    headingRow.appendChild(toggleButton);
+
+    function setSectionState(isExpanded) {
+      section.classList.toggle("is-expanded", isExpanded);
+      toggleButton.setAttribute("aria-expanded", String(isExpanded));
+      toggleButton.setAttribute("aria-label", isExpanded ? "Collapse section" : "Expand section");
+      toggleButton.querySelector(".toggle-icon").textContent = isExpanded ? "−" : "+";
+
+      if (isExpanded) {
+        contentWrapper.style.maxHeight = contentWrapper.scrollHeight + "px";
+      } else {
+        // Freeze current height before collapsing for a smooth transition.
+        if (contentWrapper.style.maxHeight === "none") {
+          contentWrapper.style.maxHeight = contentWrapper.scrollHeight + "px";
+        }
+        requestAnimationFrame(function () {
+          contentWrapper.style.maxHeight = "0px";
+        });
+      }
+    }
+
+    contentWrapper.addEventListener("transitionend", function (event) {
+      if (event.propertyName !== "max-height") {
+        return;
+      }
+
+      if (section.classList.contains("is-expanded")) {
+        // Remove the cap so expanded content can adapt naturally.
+        contentWrapper.style.maxHeight = "none";
+      }
+    });
+
+    // Default to collapsed so users can click to expand.
+    setSectionState(false);
+
+    toggleButton.addEventListener("click", function () {
+      var currentlyExpanded = toggleButton.getAttribute("aria-expanded") === "true";
+      setSectionState(!currentlyExpanded);
+    });
+  });
+});
