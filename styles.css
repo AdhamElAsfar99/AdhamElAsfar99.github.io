@@ -145,6 +145,57 @@ ul { list-style: none; }
   outline-offset: 3px;
 }
 
+.sidebar,
+.main-content,
+.theme-toggle {
+  transition: opacity 0.45s ease, visibility 0.45s ease;
+}
+
+body.is-loading .sidebar,
+body.is-loading .main-content,
+body.is-loading .theme-toggle {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.intro-overlay {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 8vw;
+  background: radial-gradient(circle at 75% 50%, rgba(196,164,100,0.09), transparent 42%), var(--bg);
+  opacity: 0;
+  transform: translateX(20px);
+  z-index: 1200;
+  transition: opacity 0.4s ease, transform 0.5s ease;
+}
+
+.intro-overlay.is-visible {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.intro-overlay.is-exit {
+  opacity: 0;
+  transform: translateX(-34px);
+}
+
+.intro-text {
+  font-family: var(--font-display);
+  font-size: clamp(1.8rem, 4.8vw, 3.6rem);
+  font-weight: 400;
+  color: var(--text);
+  text-align: center;
+  letter-spacing: 0.03em;
+  line-height: 1.2;
+  max-width: 840px;
+  text-shadow: 0 8px 28px rgba(0,0,0,0.24);
+  transform: translateY(-4vh);
+}
+
 /* ─── SIDEBAR ────────────────────────────────────────────────── */
 .sidebar {
   width: var(--sidebar-w);
@@ -725,6 +776,8 @@ ul { list-style: none; }
   .theme-toggle { top: 14px; right: 14px; width: 36px; height: 36px; }
   .theme-toggle::before,
   .theme-toggle::after { width: 18px; height: 18px; }
+  .intro-overlay { padding: 0 14px; }
+  .intro-text { font-size: clamp(1.4rem, 8vw, 2.1rem); max-width: 100%; }
   .main-content { padding: 0 20px; }
   .section-title { font-size: 2rem; }
   .section-heading-row { margin-bottom: 22px; }

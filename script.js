@@ -3,6 +3,53 @@ document.addEventListener("DOMContentLoaded", function () {
   var themeToggleButton = document.getElementById("theme-toggle");
   var savedTheme = localStorage.getItem("theme");
 
+  function runIntroOverlay() {
+    var body = document.body;
+    var overlay = document.createElement("div");
+    var introText = document.createElement("p");
+    var message = "Welcome to my portfolio page!";
+    var index = 1;
+
+    overlay.className = "intro-overlay";
+    overlay.setAttribute("role", "status");
+    overlay.setAttribute("aria-live", "polite");
+
+    introText.className = "intro-text";
+    overlay.appendChild(introText);
+
+    body.classList.add("is-loading");
+    body.appendChild(overlay);
+
+    requestAnimationFrame(function () {
+      overlay.classList.add("is-visible");
+    });
+
+    function finishIntro() {
+      overlay.classList.add("is-exit");
+      body.classList.remove("is-loading");
+
+      setTimeout(function () {
+        if (overlay.parentNode) {
+          overlay.parentNode.removeChild(overlay);
+        }
+      }, 620);
+    }
+
+    function typeFromLeft() {
+      if (index > message.length) {
+        setTimeout(finishIntro, 650);
+        return;
+      }
+
+      // Reveal from left to right by taking progressively longer prefixes.
+      introText.textContent = message.slice(0, index);
+      index += 1;
+      setTimeout(typeFromLeft, 52);
+    }
+
+    setTimeout(typeFromLeft, 300);
+  }
+
   function applyTheme(theme) {
     root.setAttribute("data-theme", theme);
     localStorage.setItem("theme", theme);
@@ -27,6 +74,8 @@ document.addEventListener("DOMContentLoaded", function () {
       applyTheme(nextTheme);
     });
   }
+
+  runIntroOverlay();
 
   // Sections requested for expand/collapse behavior.
   var collapsibleSectionIds = [
