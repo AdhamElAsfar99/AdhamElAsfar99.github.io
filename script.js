@@ -1,4 +1,33 @@
 document.addEventListener("DOMContentLoaded", function () {
+  var root = document.documentElement;
+  var themeToggleButton = document.getElementById("theme-toggle");
+  var savedTheme = localStorage.getItem("theme");
+
+  function applyTheme(theme) {
+    root.setAttribute("data-theme", theme);
+    localStorage.setItem("theme", theme);
+
+    if (!themeToggleButton) {
+      return;
+    }
+
+    themeToggleButton.setAttribute(
+      "aria-label",
+      theme === "dark" ? "Switch to light mode" : "Switch to dark mode"
+    );
+  }
+
+  // Use saved choice when available, otherwise keep dark mode default.
+  applyTheme(savedTheme === "light" ? "light" : "dark");
+
+  if (themeToggleButton) {
+    themeToggleButton.addEventListener("click", function () {
+      var currentTheme = root.getAttribute("data-theme") === "light" ? "light" : "dark";
+      var nextTheme = currentTheme === "dark" ? "light" : "dark";
+      applyTheme(nextTheme);
+    });
+  }
+
   // Sections requested for expand/collapse behavior.
   var collapsibleSectionIds = [
     "experience",
