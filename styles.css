@@ -442,6 +442,83 @@ body.is-loading .theme-toggle {
   max-width: 640px;
 }
 
+.quote-widget {
+  margin-top: 26px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--gold);
+  border-radius: var(--radius);
+  padding: 20px 22px;
+}
+
+.quote-widget-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.quote-widget-title {
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--gold);
+}
+
+.new-quote-btn {
+  padding: 8px 12px;
+  border: 1px solid var(--border-accent);
+  border-radius: var(--radius);
+  background: rgba(196,164,100,0.08);
+  color: var(--gold-light);
+  font-family: var(--font-mono);
+  font-size: 0.64rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.new-quote-btn:hover {
+  background: rgba(196,164,100,0.15);
+  border-color: var(--gold);
+  color: var(--gold);
+}
+
+.new-quote-btn:disabled {
+  opacity: 0.6;
+  cursor: wait;
+}
+
+.quote-text {
+  font-family: var(--font-display);
+  font-size: 1.2rem;
+  line-height: 1.5;
+  color: var(--text);
+}
+
+.quote-author {
+  margin-top: 10px;
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.quote-status {
+  margin-top: 10px;
+  font-size: 0.78rem;
+  color: var(--text-dim);
+  min-height: 18px;
+}
+
+.quote-status.is-error {
+  color: #e74c3c;
+}
+
 /* ─── TIMELINE ───────────────────────────────────────────────── */
 .timeline {
   display: flex;

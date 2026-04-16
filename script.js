@@ -77,6 +77,69 @@ document.addEventListener("DOMContentLoaded", function () {
 
   runIntroOverlay();
 
+  // Quotes API integration (API Ninjas).
+  var newQuoteBtn = document.getElementById("new-quote-btn");
+  var quoteText = document.getElementById("quote-text");
+  var quoteAuthor = document.getElementById("quote-author");
+  var quoteStatus = document.getElementById("quote-status");
+  var quoteCategories = "inspirational,success";
+  var quotesApiKey = "RnTyWo6R0YFJydWN3UBr0PhydU4fFe91UqPjl40n";
+
+  function setQuoteStatus(message, isError) {
+    quoteStatus.textContent = message;
+    quoteStatus.classList.toggle("is-error", Boolean(isError));
+  }
+
+  async function loadQuote() {
+    if (!newQuoteBtn || !quoteText || !quoteAuthor || !quoteStatus) {
+      return;
+    }
+
+    newQuoteBtn.disabled = true;
+    setQuoteStatus("Loading quote...", false);
+
+    try {
+      var requestUrl =
+        "https://api.api-ninjas.com/v2/randomquotes?categories=" +
+        encodeURIComponent(quoteCategories);
+      var requestHeaders = {};
+
+      if (quotesApiKey && quotesApiKey !== "PASTE_YOUR_API_NINJAS_KEY_HERE") {
+        requestHeaders["X-Api-Key"] = quotesApiKey;
+      }
+
+      var response = await fetch(requestUrl, { headers: requestHeaders });
+
+      if (!response.ok) {
+        if (response.status === 401 || response.status === 403) {
+          throw new Error("Invalid or missing API key. Add your API Ninjas key in script.js.");
+        }
+        throw new Error("Could not load quote. Please try again.");
+      }
+
+      var data = await response.json();
+      if (!Array.isArray(data) || !data.length || !data[0].quote) {
+        throw new Error("No quote data returned from API.");
+      }
+
+      var quoteItem = data[0];
+      quoteText.textContent = "\"" + quoteItem.quote + "\"";
+      quoteAuthor.textContent = quoteItem.author ? "- " + quoteItem.author : "- Unknown";
+      setQuoteStatus("Loaded from API Ninjas.", false);
+    } catch (error) {
+      quoteText.textContent = "Unable to load a quote right now.";
+      quoteAuthor.textContent = "";
+      setQuoteStatus(error.message, true);
+    } finally {
+      newQuoteBtn.disabled = false;
+    }
+  }
+
+  if (newQuoteBtn) {
+    newQuoteBtn.addEventListener("click", loadQuote);
+    loadQuote();
+  }
+
   // Sections requested for expand/collapse behavior.
   var collapsibleSectionIds = [
     "experience",
